@@ -1,43 +1,77 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
-import homePage from "./Components/Homepage.js";
+import {
+  TextInput,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  SafeAreaView,
+  ImageBackground,
+  Alert,
+} from "react-native";
+import styled from "styled-components/native";
+import HomePage from "./Components/Homepage.js";
 export default function App() {
-  const [logedIn] = useState("false");
+  const [logedIn, handleLogin] = useState(false);
 
-  const handleLogin = function () {
-    logedIn.currentState ? logedIn.setState("true") : logedIn.setState("false");
-  };
+  const handleForm = function () {};
   // Figure out way to change state with hooks and useState react
-  if (logedIn) {
+  if (!logedIn) {
     return (
       <>
-        <View style={styles.container}>
-          <Text>Hello</Text>
-          <Text>Welcome to the Fortress</Text>
-          <Button
-            onPress={handleLogin}
-            style={styles.button}
-            title="Login"
-          ></Button>
-          <Button title="Sign Up"></Button>
-        </View>
+        <StyledImage
+          overlayColor="#17e268"
+          source={require("./assets/Garden.jpg")}
+        >
+          <StyledView>
+            <StyledText>Home Grown Foods</StyledText>
+            <Button
+              onPress={() => handleLogin(true)}
+              color="white"
+              title="Login"
+            ></Button>
+            <Button
+              title="Sign Up"
+              color="white"
+              onPress={() => Alert.alert("Signing up...")}
+            ></Button>
+          </StyledView>
+        </StyledImage>
       </>
     );
   } else {
-    return <View style={styles.container}>{homePage()}</View>;
+    return (
+      <StyledSafeArea>
+        <HomePage hL={handleLogin} />
+      </StyledSafeArea>
+    );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "auto",
-    includeFontPadding: true,
-  },
-  button: {
-    color: "#ffffff",
-  },
-});
+const StyledSafeArea = styled.SafeAreaView`
+  justify-content: center;
+  flex: 1;
+`;
+const StyledView = styled.View`
+  border-radius: 10px;
+  box-shadow: 3px 3px 15px #000;
+  margin: 10px;
+  padding: 3px;
+  align-items: center;
+  justify-content: center;
+`;
+const StyledText = styled.Text`
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 5px;
+`;
+const StyledLogin = styled.View`
+  align: right;
+  font-size: 16px;
+  color: #ffffff;
+`;
+const StyledImage = styled.ImageBackground`
+  flex: 1;
+  resize-mode: cover;
+  justify-content: center;
+`;
