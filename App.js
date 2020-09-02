@@ -9,8 +9,8 @@ import {
   ImageBackground,
   Alert,
 } from "react-native";
-import { Asset, AppLoading } from "expo-asset";
-
+import { Asset } from "expo-asset";
+import { AppLoading } from "expo";
 import HomePage from "./Components/Homepage.js";
 import SignUp from "./Components/SignUp.js";
 
@@ -19,45 +19,49 @@ function cacheImages(images) {
     if (typeof image === "string") {
       return Image.prefetch(image);
     } else {
-      return Asset.fromModule(image.downloadAsync());
+      return Asset.fromModule(image).downloadAsync();
     }
   });
 }
-export default function App() {
-  const [isReady, loadingFunc] = useState(false);
+export default class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      isReady: false,
+    };
+  }
 
-  const [logedIn, handleLogin] = useState(false);
-  const [signUp, handleSignup] = useState(true);
-  const handleForm = function () {};
-
-  async function _loadAssetsAsync() {
+  async _loadAssetsAsync() {
     const imageAssets = cacheImages([require("./assets/Garden.jpg")]);
     await Promise.all([...imageAssets]);
   }
   // Figure out way to change state with hooks and useState react
-  if (!isReady) {
-    return (
-      <AppLoading
-        startAsync={_loadAssetsAsync}
-        onFinish={() => {
-          loadingFunc(true);
-        }}
-        onError={console.warn}
-      />
-      // <View style={styles.container}>
+  render() {
+    if (!this.state.isReady) {
+      return (
+        <AppLoading
+          startAsync={this._loadAssetsAsync}
+          onFinish={() => {
+            this.setState({ isReady: true });
+          }}
+          onError={console.warn}
+        />
 
-      //   <Text onPress={() => handleSignUp(true)} style={styles.login}>
-      //     Already a user... Sign In
-      //   </Text>
+        // <View style={styles.container}>
 
-      // </View>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        <SignUp> </SignUp>
-      </View>
-    );
+        //   <Text onPress={() => handleSignUp(true)} style={styles.login}>
+        //     Already a user... Sign In
+        //   </Text>
+
+        // </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <SignUp> </SignUp>
+        </View>
+      );
+    }
   }
 }
 
