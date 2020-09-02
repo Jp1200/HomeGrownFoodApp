@@ -108,7 +108,7 @@ export default class SignUp extends React.Component {
                 transform: [{ translateY: this.buttonY }],
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign in</Text>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign Up</Text>
             </Animated.View>
           </TapGestureHandler>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
@@ -121,7 +121,7 @@ export default class SignUp extends React.Component {
               }}
             >
               <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}>
-                Log in
+                Log in with Google
               </Text>
             </Animated.View>
           </TapGestureHandler>
