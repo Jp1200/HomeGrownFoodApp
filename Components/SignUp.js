@@ -8,16 +8,26 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  Animated,
 } from "react-native";
+
+import { TapGestureHandler, State } from "react-native-gesture-handler";
 // import Animated from "react-native-reanimated";
-// import { TapGestureHandler, State } from "react-native-gesture-handler";
 const { width, height } = Dimensions.get("window");
+const { Value, event, block, cond, eq, set } = Animated;
 export default class SignUp extends React.Component {
-  state = {
-    password: "",
-    email: "",
-    phone_number: "",
-  };
+  constructor() {
+    super();
+    this.buttonOpacity = new Value(1);
+    this.onStateChange = () => {
+      this.buttonOpacity.setValue(0);
+    };
+    this.state = {
+      password: "",
+      email: "",
+      phone_number: "",
+    };
+  }
 
   onChangeText = (key, val) => {
     this.setState({ [key]: val });
@@ -42,9 +52,16 @@ export default class SignUp extends React.Component {
           />
         </View>
         <View style={{ height: height / 3, justifyContent: "center" }}>
-          <View style={styles.button}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign in</Text>
-          </View>
+          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+            <Animated.View
+              style={{
+                ...styles.button,
+                opacity: this.buttonOpacity,
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign in</Text>
+            </Animated.View>
+          </TapGestureHandler>
           <View
             style={{
               ...styles.button,
