@@ -9,31 +9,56 @@ import {
   Image,
   Dimensions,
   Animated,
+  Easing,
 } from "react-native";
 
 import { TapGestureHandler, State } from "react-native-gesture-handler";
-// import Animated from "react-native-reanimated";
+import { StyleSheetManager } from "styled-components";
+
 const { width, height } = Dimensions.get("window");
-const { Value, event, block, cond, eq, set } = Animated;
+const { Value, timing, interpolate } = Animated;
 export default class SignUp extends React.Component {
   constructor() {
     super();
     this.buttonOpacity = new Value(1);
     this.onStateChange = () => {
-      this.buttonOpacity.setValue(0);
+      timing(this.buttonOpacity, {
+        toValue: 0,
+        duration: 1000,
+        easing: Easing.inOut(Easing.ease),
+      }).start();
     };
     this.state = {
       password: "",
       email: "",
-      phone_number: "",
     };
+    this.buttonY = this.buttonOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [100, 0],
+    });
+    this.bgY = this.buttonOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-height / 3, 0],
+    });
+    this.textInputZIndex = this.buttonOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, -1],
+    });
+    this.textInputY = this.buttonOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 100],
+    });
+    this.textInputOpacity = this.buttonOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, 0],
+    });
   }
 
   onChangeText = (key, val) => {
     this.setState({ [key]: val });
   };
   signUp = async () => {
-    const { password, email, phone_number } = this.state;
+    const { password, email } = this.state;
     try {
       // here place your signup logic
       console.log("user successfully signed up!: ", success);
@@ -45,12 +70,17 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ ...StyleSheet.absoluteFill }}>
+        <Animated.View
+          style={{
+            ...StyleSheet.absoluteFill,
+            transform: [{ translateY: this.bgY }],
+          }}
+        >
           <Image
             source={require("../assets/Garden.jpg")}
             style={{ flex: 1, height: null, width: null }}
           />
-        </View>
+        </Animated.View>
         <View style={{ height: height / 3, justifyContent: "center" }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
@@ -62,57 +92,74 @@ export default class SignUp extends React.Component {
               <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign in</Text>
             </Animated.View>
           </TapGestureHandler>
-          <View
+          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+            <Animated.View
+              style={{
+                ...styles.button,
+                backgroundColor: "#3E3BEF",
+                opacity: this.buttonOpacity,
+                transform: [{ translateY: this.buttonY }],
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}>
+                Log in
+              </Text>
+            </Animated.View>
+          </TapGestureHandler>
+          <Animated.View
             style={{
-              ...styles.button,
-              backgroundColor: "#3E3BEF",
+              zIndex: this.textInputZIndex,
+              opacity: this.textInputOpacity,
+              transform: [{ translateY: this.textInputY }],
+              height: height / 3,
+              ...StyleSheet.absoluteFill,
+              top: null,
+              justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}>
-              Log in
-            </Text>
-          </View>
+            <TextInput
+              icon="email"
+              style={styles.input}
+              placeholder="Email"
+              autoCapitalize="none"
+              placeholderTextColor="#AFAFAF"
+              onChangeText={(val) => this.onChangeText("email", val)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry={true}
+              autoCapitalize="none"
+              placeholderTextColor="#AFAFAF"
+              onChangeText={(val) => this.onChangeText("password", val)}
+            />
+
+            {/* <TextInput
+              style={styles.input}
+              placeholder="Phone Number"
+              autoCapitalize="none"
+              placeholderTextColor="#AFAFAF"
+              onChangeText={(val) => this.onChangeText("phone_number", val)}
+            /> */}
+            <TouchableOpacity
+              underlayColor="#fff"
+              onPress={this.signUp}
+              style={styles.btn}
+            >
+              <Button
+                color={"#000"}
+                title="Sign up"
+                style={styles.signupText}
+              ></Button>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
 
         {/* <Animated.Text style={[styles.text, { opacity: SignUp.fadeAnim }]}>
           HomeGrown Foods
         </Animated.Text>
 
-        <TextInput
-          icon="email"
-          style={styles.input}
-          placeholder="Email"
-          autoCapitalize="none"
-          placeholderTextColor="#AFAFAF"
-          onChangeText={(val) => this.onChangeText("email", val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor="#AFAFAF"
-          onChangeText={(val) => this.onChangeText("password", val)}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          autoCapitalize="none"
-          placeholderTextColor="#AFAFAF"
-          onChangeText={(val) => this.onChangeText("phone_number", val)}
-        />
-        <TouchableOpacity
-          underlayColor="#fff"
-          onPress={this.signUp}
-          style={styles.btn}
-        >
-          <Button
-            color={"#000"}
-            title="Sign up"
-            style={styles.signupText}
-          ></Button>
-        </TouchableOpacity> */}
+         */}
       </View>
     );
   }
@@ -120,48 +167,36 @@ export default class SignUp extends React.Component {
 
 const styles = StyleSheet.create({
   input: {
-    width: 250,
-    height: 35,
-    backgroundColor: "#fffffe",
-    shadowOffset: { width: 0, height: 10 },
-    shadowColor: "black",
-    shadowOpacity: 0.5,
-    margin: 10,
-    padding: 8,
-    color: "black",
-    borderRadius: 14,
-    fontSize: 18,
+    marginHorizontal: 20,
+
+    marginVertical: 5,
+    justifyContent: "center",
+    height: 45,
+    borderWidth: 0.5,
+    borderColor: "rgba(0,0,0,0.2)",
+
+    borderRadius: 25,
+    fontSize: 16,
     fontWeight: "500",
+    paddingLeft: 10,
   },
   container: {
     flex: 1,
     justifyContent: "flex-end",
   },
-  text: {
-    textDecorationLine: "underline",
-    color: "black",
-    position: "absolute",
-    top: 40,
-    borderWidth: 1,
-    borderColor: "#fff",
-    borderRadius: 12,
-    fontSize: 32,
-    margin: 14,
-    padding: 2,
-    fontWeight: "800",
 
-    textDecorationStyle: "double",
-  },
   btn: {
-    width: 100,
-
+    height: 60,
+    justifyContent: "center",
+    marginHorizontal: 25,
+    alignItems: "center",
     backgroundColor: "#fff",
-    borderRadius: 10,
-    borderWidth: 0.8,
-    borderColor: "#fff",
-    shadowOffset: { width: 0, height: 10 },
+    borderRadius: 35,
+
+    marginVertical: 5,
+    shadowOffset: { width: 2, height: 2 },
     shadowColor: "black",
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.2,
   },
   signupText: {
     color: "#fff",
