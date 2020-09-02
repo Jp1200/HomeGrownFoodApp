@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Image,
   Dimensions,
   Animated,
   Easing,
@@ -14,7 +13,7 @@ import {
 
 import { TapGestureHandler, State } from "react-native-gesture-handler";
 import { StyleSheetManager } from "styled-components";
-
+import Svg, { Image, Circle, ClipPath } from "react-native-svg";
 const { width, height } = Dimensions.get("window");
 const { Value, timing, interpolate } = Animated;
 export default class SignUp extends React.Component {
@@ -24,6 +23,13 @@ export default class SignUp extends React.Component {
     this.onStateChange = () => {
       timing(this.buttonOpacity, {
         toValue: 0,
+        duration: 1000,
+        easing: Easing.inOut(Easing.ease),
+      }).start();
+    };
+    this.onCloseState = () => {
+      timing(this.buttonOpacity, {
+        toValue: 1,
         duration: 1000,
         easing: Easing.inOut(Easing.ease),
       }).start();
@@ -38,7 +44,7 @@ export default class SignUp extends React.Component {
     });
     this.bgY = this.buttonOpacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [-height / 3, 0],
+      outputRange: [-height / 3 - 50, 0],
     });
     this.textInputZIndex = this.buttonOpacity.interpolate({
       inputRange: [0, 1],
@@ -51,6 +57,10 @@ export default class SignUp extends React.Component {
     this.textInputOpacity = this.buttonOpacity.interpolate({
       inputRange: [0, 1],
       outputRange: [1, 0],
+    });
+    this.rotateCross = this.buttonOpacity.interpolate({
+      inputRange: [0, 1],
+      outputRange: [String(180) + "deg", String(360) + "deg"],
     });
   }
 
@@ -76,10 +86,18 @@ export default class SignUp extends React.Component {
             transform: [{ translateY: this.bgY }],
           }}
         >
-          <Image
-            source={require("../assets/Garden.jpg")}
-            style={{ flex: 1, height: null, width: null }}
-          />
+          <Svg height={height + 50} width={width}>
+            <ClipPath id="clip">
+              <Circle r={height + 50} cx={width / 2} />
+            </ClipPath>
+            <Image
+              href={require("../assets/Garden.jpg")}
+              height={height + 50}
+              width={width}
+              preserveAspectRatio="xMidyMid slice"
+              clipPath="url(#clip)"
+            />
+          </Svg>
         </Animated.View>
         <View style={{ height: height / 3, justifyContent: "center" }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
@@ -87,6 +105,7 @@ export default class SignUp extends React.Component {
               style={{
                 ...styles.button,
                 opacity: this.buttonOpacity,
+                transform: [{ translateY: this.buttonY }],
               }}
             >
               <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign in</Text>
@@ -117,17 +136,29 @@ export default class SignUp extends React.Component {
               justifyContent: "center",
             }}
           >
+            <TapGestureHandler onHandlerStateChange={this.onCloseState}>
+              <Animated.View style={styles.closeButton}>
+                <Animated.Text
+                  style={{
+                    fontSize: 15,
+                    transform: [{ rotate: this.rotateCross }],
+                  }}
+                >
+                  X
+                </Animated.Text>
+              </Animated.View>
+            </TapGestureHandler>
             <TextInput
               icon="email"
               style={styles.input}
-              placeholder="Email"
+              placeholder="EMAIL"
               autoCapitalize="none"
               placeholderTextColor="#AFAFAF"
               onChangeText={(val) => this.onChangeText("email", val)}
             />
             <TextInput
               style={styles.input}
-              placeholder="Password"
+              placeholder="PASSWORD"
               secureTextEntry={true}
               autoCapitalize="none"
               placeholderTextColor="#AFAFAF"
@@ -148,7 +179,7 @@ export default class SignUp extends React.Component {
             >
               <Button
                 color={"#000"}
-                title="Sign up"
+                title="SIGN UP"
                 style={styles.signupText}
               ></Button>
             </TouchableOpacity>
@@ -212,5 +243,19 @@ const styles = StyleSheet.create({
     borderRadius: 150,
     alignItems: "center",
     justifyContent: "center",
+  },
+  closeButton: {
+    height: 40,
+    width: 40,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    top: -20,
+    left: width / 2 - 20,
+    shadowOffset: { width: 2, height: 2 },
+    shadowColor: "black",
+    shadowOpacity: 0.2,
   },
 });
