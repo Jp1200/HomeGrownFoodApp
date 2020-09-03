@@ -1,0 +1,23 @@
+
+
+- Create Homepage 
+    - Feed
+    - sticky footer bar
+    - logic with sign in and login 
+    - importing Icons with React Native
+    
+- Work on login information and backend logic
+    - Research backend frameworks like Django 
+    - Creating a database to store emails and passwords
+    - Find way to implement Google auth and login
+
+
+- implement about page
+- settings page
+- darkmode / lightmode in React Native
+- Profile Page 
+
+- Animation making Class construction idea:
+    - React Component class 
+    - include props to set values and propogate them
+    - callback functions to main class in App
