@@ -12,9 +12,14 @@ import {
   Dimensions,
   Animated,
   Easing,
+  Platform,
 } from "react-native";
-import KeyText from "./KeyText.js";
-import { TapGestureHandler, State } from "react-native-gesture-handler";
+
+import {
+  TapGestureHandler,
+  State,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { StyleSheetManager } from "styled-components";
 import Svg, { Image, Circle, ClipPath } from "react-native-svg";
 const { width, height } = Dimensions.get("window");
@@ -23,7 +28,7 @@ export default class SignUp extends React.Component {
   constructor() {
     super();
     this.buttonOpacity = new Value(1);
-    this.keyboardOffset = new Value(0);
+
     this.onStateChange = () => {
       timing(this.buttonOpacity, {
         toValue: 0,
@@ -86,7 +91,11 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      >
+        {/* Image Background carrier */}
         <Animated.View
           style={{
             ...StyleSheet.absoluteFill,
@@ -98,6 +107,7 @@ export default class SignUp extends React.Component {
               <Circle r={height + 50} cx={width / 2} />
             </ClipPath>
             <Image
+              onPress={Keyboard.dismiss}
               href={require("../assets/Garden.jpg")}
               height={height + 50}
               width={width}
@@ -106,6 +116,7 @@ export default class SignUp extends React.Component {
             />
           </Svg>
         </Animated.View>
+
         <View style={{ height: height / 3, justifyContent: "center" }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
@@ -143,9 +154,11 @@ export default class SignUp extends React.Component {
               justifyContent: "center",
             }}
           >
+            {/* X Button */}
             <TapGestureHandler onHandlerStateChange={this.onCloseState}>
               <Animated.View style={styles.closeButton}>
                 <Animated.Text
+                  onPress={Keyboard.dismiss}
                   style={{
                     fontSize: 15,
                     transform: [{ rotate: this.rotateCross }],
@@ -155,40 +168,42 @@ export default class SignUp extends React.Component {
                 </Animated.Text>
               </Animated.View>
             </TapGestureHandler>
+            {/* Inputs */}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <TextInput
+                icon="email"
+                style={styles.input}
+                placeholder="EMAIL"
+                autoCapitalize="none"
+                placeholderTextColor="#AFAFAF"
+                onChangeText={(val) => this.onChangeText("email", val)}
+              />
 
-            <TextInput
-              icon="email"
-              style={styles.input}
-              placeholder="EMAIL"
-              autoCapitalize="none"
-              placeholderTextColor="#AFAFAF"
-              onChangeText={(val) => this.onChangeText("email", val)}
-            />
+              <TextInput
+                style={styles.input}
+                placeholder="PASSWORD"
+                secureTextEntry={true}
+                autoCapitalize="none"
+                placeholderTextColor="#AFAFAF"
+                onChangeText={(val) => this.onChangeText("password", val)}
+              />
 
-            <TextInput
-              style={styles.input}
-              placeholder="PASSWORD"
-              secureTextEntry={true}
-              autoCapitalize="none"
-              placeholderTextColor="#AFAFAF"
-              onChangeText={(val) => this.onChangeText("password", val)}
-            />
-
-            {/* <TextInput
+              {/* <TextInput
               style={styles.input}
               placeholder="Phone Number"
               autoCapitalize="none"
               placeholderTextColor="#AFAFAF"
               onChangeText={(val) => this.onChangeText("phone_number", val)}
             /> */}
-            <TouchableOpacity underlayColor="#fff" style={styles.btn}>
-              <Button
-                onPress={this.signUp}
-                color={"#000"}
-                title="SIGN UP"
-                style={styles.signupText}
-              ></Button>
-            </TouchableOpacity>
+              <TouchableOpacity underlayColor="#fff" style={styles.btn}>
+                <Button
+                  onPress={this.signUp}
+                  color={"#000"}
+                  title="SIGN UP"
+                  style={styles.signupText}
+                ></Button>
+              </TouchableOpacity>
+            </TouchableWithoutFeedback>
           </Animated.View>
         </View>
 
@@ -197,7 +212,7 @@ export default class SignUp extends React.Component {
         </Animated.Text>
 
          */}
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -215,7 +230,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderWidth: 0.5,
     borderColor: "rgba(0,0,0,0.2)",
-
+    backgroundColor: "white",
     borderRadius: 25,
     fontSize: 16,
     fontWeight: "500",
