@@ -116,7 +116,7 @@ export default class SignUp extends React.Component {
             />
           </Svg>
         </Animated.View>
-
+        {/* Sign up and Login buttons plus forms */}
         <View style={{ height: height / 3, justifyContent: "center" }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
