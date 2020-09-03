@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Keyboard, TextInput } from "react-native";
+import { Keyboard, TextInput, View } from "react-native";
 
-class Example extends Component {
+export default class KeyText extends Component {
   state = {
     keyboardOffset: 0,
   };
@@ -42,6 +42,7 @@ class Example extends Component {
             position: "absolute",
             width: "100%",
             bottom: this.state.keyboardOffset,
+            color: "black",
           }}
           onSubmitEditing={Keyboard.dismiss}
         />

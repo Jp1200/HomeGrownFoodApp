@@ -1,6 +1,8 @@
 import React from "react";
 import {
   Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
   View,
   Button,
   TextInput,
@@ -11,7 +13,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
-
+import KeyText from "./KeyText.js";
 import { TapGestureHandler, State } from "react-native-gesture-handler";
 import { StyleSheetManager } from "styled-components";
 import Svg, { Image, Circle, ClipPath } from "react-native-svg";
@@ -21,6 +23,7 @@ export default class SignUp extends React.Component {
   constructor() {
     super();
     this.buttonOpacity = new Value(1);
+    this.keyboardOffset = new Value(0);
     this.onStateChange = () => {
       timing(this.buttonOpacity, {
         toValue: 0,
@@ -35,10 +38,12 @@ export default class SignUp extends React.Component {
         easing: Easing.inOut(Easing.ease),
       }).start();
     };
+
     this.state = {
       password: "",
       email: "",
     };
+
     this.buttonY = this.buttonOpacity.interpolate({
       inputRange: [0, 1],
       outputRange: [100, 0],
@@ -74,6 +79,7 @@ export default class SignUp extends React.Component {
       // here place your signup logic
       console.log("user successfully signed up!: ", success);
     } catch (err) {
+      console.log(this.state);
       console.log("error signing up: ", err);
     }
   };
@@ -149,6 +155,7 @@ export default class SignUp extends React.Component {
                 </Animated.Text>
               </Animated.View>
             </TapGestureHandler>
+
             <TextInput
               icon="email"
               style={styles.input}
@@ -157,6 +164,7 @@ export default class SignUp extends React.Component {
               placeholderTextColor="#AFAFAF"
               onChangeText={(val) => this.onChangeText("email", val)}
             />
+
             <TextInput
               style={styles.input}
               placeholder="PASSWORD"
@@ -173,12 +181,9 @@ export default class SignUp extends React.Component {
               placeholderTextColor="#AFAFAF"
               onChangeText={(val) => this.onChangeText("phone_number", val)}
             /> */}
-            <TouchableOpacity
-              underlayColor="#fff"
-              onPress={this.signUp}
-              style={styles.btn}
-            >
+            <TouchableOpacity underlayColor="#fff" style={styles.btn}>
               <Button
+                onPress={this.signUp}
                 color={"#000"}
                 title="SIGN UP"
                 style={styles.signupText}
@@ -200,6 +205,10 @@ export default class SignUp extends React.Component {
 const styles = StyleSheet.create({
   input: {
     marginHorizontal: 20,
+
+    // position: "absolute",
+    // width: "100%",
+    // bottom: this.state.keyboardOffset,
 
     marginVertical: 5,
     justifyContent: "center",
