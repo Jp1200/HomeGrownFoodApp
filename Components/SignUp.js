@@ -22,6 +22,7 @@ import {
 } from "react-native-gesture-handler";
 import { StyleSheetManager } from "styled-components";
 import Svg, { Image, Circle, ClipPath } from "react-native-svg";
+import Home from "./Homepage";
 const { width, height } = Dimensions.get("window");
 const { Value, timing, interpolate } = Animated;
 export default class SignUp extends React.Component {
@@ -47,6 +48,7 @@ export default class SignUp extends React.Component {
     this.state = {
       password: "",
       email: "",
+      isSignedIn: false,
     };
 
     this.buttonY = this.buttonOpacity.interpolate({
@@ -81,6 +83,7 @@ export default class SignUp extends React.Component {
   signUp = async () => {
     const { password, email } = this.state;
     try {
+      this.setState({ isSignedIn: true });
       // here place your signup logic
       console.log("user successfully signed up!: ", success);
     } catch (err) {
@@ -90,104 +93,113 @@ export default class SignUp extends React.Component {
   };
 
   render() {
-    return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-      >
-        {/* Image Background carrier */}
-        <Animated.View
-          style={{
-            ...StyleSheet.absoluteFill,
-            transform: [{ translateY: this.bgY }],
-          }}
+    if (this.state.isSignedIn) {
+      return (
+        <Home state={this.state.isSignedIn} toLogOut={this.onChangeText}></Home>
+      );
+    } else {
+      return (
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
         >
-          <Svg height={height + 50} width={width}>
-            <ClipPath id="clip">
-              <Circle r={height + 50} cx={width / 2} />
-            </ClipPath>
-            <Image
-              onPress={Keyboard.dismiss}
-              href={require("../assets/Garden.jpg")}
-              height={height + 50}
-              width={width}
-              preserveAspectRatio="xMidyMid slice"
-              clipPath="url(#clip)"
-            />
-          </Svg>
-        </Animated.View>
-        {/* Sign up and Login buttons plus forms */}
-        <View style={{ height: height / 3, justifyContent: "center" }}>
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
-            <Animated.View
-              style={{
-                ...styles.button,
-                opacity: this.buttonOpacity,
-                transform: [{ translateY: this.buttonY }],
-              }}
-            >
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sign Up</Text>
-            </Animated.View>
-          </TapGestureHandler>
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
-            <Animated.View
-              style={{
-                ...styles.button,
-                backgroundColor: "#3E3BEF",
-                opacity: this.buttonOpacity,
-                transform: [{ translateY: this.buttonY }],
-              }}
-            >
-              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}>
-                Log in with Google
-              </Text>
-            </Animated.View>
-          </TapGestureHandler>
+          {/* Image Background carrier */}
           <Animated.View
             style={{
-              zIndex: this.textInputZIndex,
-              opacity: this.textInputOpacity,
-              transform: [{ translateY: this.textInputY }],
-              height: height / 3,
               ...StyleSheet.absoluteFill,
-              top: null,
-              justifyContent: "center",
+              transform: [{ translateY: this.bgY }],
             }}
           >
-            {/* X Button */}
-            <TapGestureHandler onHandlerStateChange={this.onCloseState}>
-              <Animated.View style={styles.closeButton}>
-                <Animated.Text
-                  onPress={Keyboard.dismiss}
-                  style={{
-                    fontSize: 15,
-                    transform: [{ rotate: this.rotateCross }],
-                  }}
-                >
-                  X
-                </Animated.Text>
+            <Svg height={height + 50} width={width}>
+              <ClipPath id="clip">
+                <Circle r={height + 50} cx={width / 2} />
+              </ClipPath>
+              <Image
+                onPress={Keyboard.dismiss}
+                href={require("../assets/Garden.jpg")}
+                height={height + 50}
+                width={width}
+                preserveAspectRatio="xMidyMid slice"
+                clipPath="url(#clip)"
+              />
+            </Svg>
+          </Animated.View>
+          {/* Sign up and Login buttons plus forms */}
+          <View style={{ height: height / 3, justifyContent: "center" }}>
+            <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+              <Animated.View
+                style={{
+                  ...styles.button,
+                  opacity: this.buttonOpacity,
+                  transform: [{ translateY: this.buttonY }],
+                }}
+              >
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                  Sign Up
+                </Text>
               </Animated.View>
             </TapGestureHandler>
-            {/* Inputs */}
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <TextInput
-                icon="email"
-                style={styles.input}
-                placeholder="EMAIL"
-                autoCapitalize="none"
-                placeholderTextColor="#AFAFAF"
-                onChangeText={(val) => this.onChangeText("email", val)}
-              />
+            <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+              <Animated.View
+                style={{
+                  ...styles.button,
+                  backgroundColor: "#3E3BEF",
+                  opacity: this.buttonOpacity,
+                  transform: [{ translateY: this.buttonY }],
+                }}
+              >
+                <Text
+                  style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}
+                >
+                  Log in with Google
+                </Text>
+              </Animated.View>
+            </TapGestureHandler>
+            <Animated.View
+              style={{
+                zIndex: this.textInputZIndex,
+                opacity: this.textInputOpacity,
+                transform: [{ translateY: this.textInputY }],
+                height: height / 3,
+                ...StyleSheet.absoluteFill,
+                top: null,
+                justifyContent: "center",
+              }}
+            >
+              {/* X Button */}
+              <TapGestureHandler onHandlerStateChange={this.onCloseState}>
+                <Animated.View style={styles.closeButton}>
+                  <Animated.Text
+                    onPress={Keyboard.dismiss}
+                    style={{
+                      fontSize: 15,
+                      transform: [{ rotate: this.rotateCross }],
+                    }}
+                  >
+                    X
+                  </Animated.Text>
+                </Animated.View>
+              </TapGestureHandler>
+              {/* Inputs */}
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <TextInput
+                  icon="email"
+                  style={styles.input}
+                  placeholder="EMAIL"
+                  autoCapitalize="none"
+                  placeholderTextColor="#AFAFAF"
+                  onChangeText={(val) => this.onChangeText("email", val)}
+                />
 
-              <TextInput
-                style={styles.input}
-                placeholder="PASSWORD"
-                secureTextEntry={true}
-                autoCapitalize="none"
-                placeholderTextColor="#AFAFAF"
-                onChangeText={(val) => this.onChangeText("password", val)}
-              />
-
+                <TextInput
+                  style={styles.input}
+                  placeholder="PASSWORD"
+                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  placeholderTextColor="#AFAFAF"
+                  onChangeText={(val) => this.onChangeText("password", val)}
+                />
+              </TouchableWithoutFeedback>
               {/* <TextInput
               style={styles.input}
               placeholder="Phone Number"
@@ -203,17 +215,17 @@ export default class SignUp extends React.Component {
                   style={styles.signupText}
                 ></Button>
               </TouchableOpacity>
-            </TouchableWithoutFeedback>
-          </Animated.View>
-        </View>
+            </Animated.View>
+          </View>
 
-        {/* <Animated.Text style={[styles.text, { opacity: SignUp.fadeAnim }]}>
+          {/* <Animated.Text style={[styles.text, { opacity: SignUp.fadeAnim }]}>
           HomeGrown Foods
         </Animated.Text>
 
          */}
-      </KeyboardAvoidingView>
-    );
+        </KeyboardAvoidingView>
+      );
+    }
   }
 }
 
