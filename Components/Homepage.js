@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FooterPanel from "./FooterPanel.js";
 import { AppState, StyleSheet, Text, View, Button } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Home(props) {
   const [selection, onSelectionChange] = useState("");
@@ -31,7 +32,7 @@ export default function Home(props) {
           onPress={() => props.toLogOut("isSignedIn", false)}
           color="black"
         ></Button>
-
+        <ScrollView></ScrollView>
         <FooterPanel></FooterPanel>
       </View>
     );

@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 import {
   View,
@@ -18,11 +19,34 @@ export default class FooterPanel extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity>
-          <Button title="Profile"></Button>
-          <Button title="+"></Button>
-          <Button title="XD"></Button>
-        </TouchableOpacity>
+        <View
+          style={{
+            justifyContent: "center",
+            alignContent: "center",
+            backgroundColor: "#green",
+            marginHorizontal: 45,
+          }}
+        >
+          <Icon name="home" size={35} color="#000" />
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignContent: "center",
+            marginHorizontal: 45,
+          }}
+        >
+          <Icon name="plus-square" size={35} color="#000" />
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignContent: "center",
+            marginHorizontal: 45,
+          }}
+        >
+          <Icon name="user" size={35} color="#000" />
+        </View>
       </View>
     );
   }
@@ -31,14 +55,16 @@ export default class FooterPanel extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 30,
+
     flexDirection: "row",
+    justifyContent: "space-evenly",
     backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
+
     position: "absolute",
     bottom: 0,
+
     width: width,
     height: height / 12,
   },
+  footerText: {},
 });
