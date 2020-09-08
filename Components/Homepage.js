@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import FooterPanel from "./FooterPanel.js";
-import { AppState, StyleSheet, Text, View, Button } from "react-native";
+import {
+  AppState,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  SafeAreaView,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-
+import Feed from "./Feed.js";
+import Header from "./Header";
 export default function Home(props) {
   const [selection, onSelectionChange] = useState("");
 
@@ -13,28 +21,38 @@ export default function Home(props) {
 
   if (selection == "profile") {
     return (
-      <View>
-        <Text>{selection}</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <Header></Header>
+        <ScrollView>
+          <Text style={styles.text}>{selection}</Text>
+        </ScrollView>
+        <FooterPanel changeSelect={handleSelectionChange}></FooterPanel>
+      </SafeAreaView>
     );
   } else if (selection == "postCreation") {
     return (
-      <View>
-        <Text>{selection}</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <Header></Header>
+        <ScrollView>
+          <Text style={styles.text}>{selection}</Text>
+        </ScrollView>
+        <FooterPanel changeSelect={handleSelectionChange}></FooterPanel>
+      </SafeAreaView>
     );
   } else {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.text}>Welcome to the Neighborhood Garden!</Text>
         <Button
           title="Press to Log out"
           onPress={() => props.toLogOut("isSignedIn", false)}
           color="black"
         ></Button>
-        <ScrollView></ScrollView>
-        <FooterPanel></FooterPanel>
-      </View>
+        <ScrollView>
+          <Feed></Feed>
+        </ScrollView>
+        <FooterPanel changeSelect={handleSelectionChange}></FooterPanel>
+      </SafeAreaView>
     );
   }
 }

@@ -12,7 +12,7 @@ import {
 
 const { width, height } = Dimensions.get("window");
 
-export default class FooterPanel extends React.Component {
+export default class Header extends React.Component {
   constructor(props) {
     super();
   }
@@ -23,50 +23,36 @@ export default class FooterPanel extends React.Component {
           style={{
             justifyContent: "center",
 
-            marginHorizontal: 40,
+            marginHorizontal: 35,
+            position: "absolute",
+            left: 0,
           }}
         >
           <Icon
-            name="home"
-            size={35}
+            name="wrench"
+            size={20}
             color="#000"
             onPress={() => {
               console.log("pressed");
-              this.props.changeSelect("");
             }}
           />
         </View>
+
         <View
           style={{
             justifyContent: "center",
 
-            marginHorizontal: 40,
+            marginHorizontal: 35,
+            position: "absolute",
+            right: 0,
           }}
         >
           <Icon
-            name="plus-square"
-            size={35}
+            name="envelope"
+            size={20}
             color="#000"
             onPress={() => {
               console.log("pressed");
-              this.props.changeSelect("postCreation");
-            }}
-          />
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-
-            marginHorizontal: 40,
-          }}
-        >
-          <Icon
-            name="user"
-            size={43}
-            color="#000"
-            onPress={() => {
-              console.log("pressed");
-              this.props.changeSelect("profile");
             }}
           />
         </View>
@@ -84,10 +70,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     position: "absolute",
-    bottom: 0,
+    top: 0,
 
     width: width,
-    height: height / 12,
+    height: height / 14,
   },
   footerText: {},
 });
