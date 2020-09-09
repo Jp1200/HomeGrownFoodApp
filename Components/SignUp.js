@@ -14,7 +14,7 @@ import {
   Easing,
   Platform,
 } from "react-native";
-
+import firebase from "firebase";
 import {
   TapGestureHandler,
   State,
@@ -49,6 +49,7 @@ export default class SignUp extends React.Component {
       password: "",
       email: "",
       isSignedIn: false,
+      method: "",
     };
 
     this.buttonY = this.buttonOpacity.interpolate({
@@ -78,18 +79,39 @@ export default class SignUp extends React.Component {
   }
 
   onChangeText = (key, val) => {
+    console.log(this.state);
     this.setState({ [key]: val });
   };
   signUp = async () => {
-    const { password, email } = this.state;
+    const password = this.state.password;
+    const email = this.state.email;
     try {
-      this.setState({ isSignedIn: true });
-      // here place your signup logic
-      console.log("user successfully signed up!: ", success);
-    } catch (err) {
-      console.log(this.state);
-      console.log("error signing up: ", err);
-    }
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .catch(function (err) {
+          alert(err.message);
+          console.log("error signing up: ", err.message);
+        });
+    } catch {}
+    await this.setState({ isSignedIn: true });
+    // here place your signup logic
+  };
+  logIn = async () => {
+    const password = this.state.password;
+    const email = this.state.email;
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // ...
+        });
+    } catch {}
+    await this.setState({ isSignedIn: true });
   };
 
   render() {
@@ -149,9 +171,10 @@ export default class SignUp extends React.Component {
                 }}
               >
                 <Text
+                  onPress={() => this.setState({ method: "returning" })}
                   style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}
                 >
-                  Log in with Google
+                  Log in
                 </Text>
               </Animated.View>
             </TapGestureHandler>
@@ -209,7 +232,9 @@ export default class SignUp extends React.Component {
             /> */}
               <TouchableOpacity underlayColor="#fff" style={styles.btn}>
                 <Button
-                  onPress={this.signUp}
+                  onPress={
+                    this.state.method == "returning" ? this.logIn : this.signUp
+                  }
                   color={"#000"}
                   title="SIGN UP"
                   style={styles.signupText}
