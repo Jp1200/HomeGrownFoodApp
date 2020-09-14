@@ -1,10 +1,10 @@
 
 
 - Create Homepage 
-    - Feed
-    - sticky footer bar
-    - logic with sign in and login 
-    - importing Icons with React Native
+    - Feed √
+    - sticky footer bar √
+    - logic with sign in and login √
+    - importing Icons with React Native √
     
 - Work on login information and backend logic
     - Research backend frameworks like Django 
